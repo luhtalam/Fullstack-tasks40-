@@ -1,10 +1,16 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const cors = require('cors')
 
+app.use(cors())
 app.use(bodyParser.json())
+morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
+//app.use(morgan('tiny'))
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
@@ -33,7 +39,7 @@ app.get('/api/persons/:id', (request, response) => {
 const generateId = () => {
     const random = Math.random()
     const upperBound = 100000
-    return Math.ceil(random*upperBound)
+    return Math.ceil(random * upperBound)
 }
 
 const checkValidity = (body, response) => {
@@ -41,7 +47,7 @@ const checkValidity = (body, response) => {
         response.status(400).json({ error: 'name missing' })
     } else if (body.number === undefined || body.number === "") {
         response.status(400).json({ error: 'number missing' })
-    } else if (persons.find(person => person.name === body.name)){
+    } else if (persons.find(person => person.name === body.name)) {
         response.status(400).json({ error: 'name must be unique' })
     }
 }
