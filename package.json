@@ -1,0 +1,28 @@
+{
+  "name": "puhelinluettelo-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "node_modules/.bin/nodemon index.js",
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luhtalam/Fullstack-tasks40-.git"
+  },
+  "author": "Joni Luhtalampi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luhtalam/Fullstack-tasks40-/issues"
+  },
+  "homepage": "https://github.com/luhtalam/Fullstack-tasks40-#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.7"
+  }
+}
