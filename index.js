@@ -68,10 +68,21 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 })
 
+app.put('/api/persons/:id', (request, response) =>{
+    const id = Number(request.params.id)
+    const body = request.body
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: id
+    }
+    persons = persons.filter(person => person.id !== id).concat(person)
+    response.json(person)
+})
+
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
-
     response.status(204).end()
 })
 
