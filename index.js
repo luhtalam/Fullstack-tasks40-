@@ -69,47 +69,39 @@ app.get('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!checkValidity(body, response)) {
-        return response
-    }
+    checkValidity(body, response)
 
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
+    Person.find({ name: body.name })
+        .then(persons => persons.length === 0)
+        .then(isUnique => {
+            if (isUnique) {
+                const person = new Person({
+                    name: body.name,
+                    number: body.number
+                })
 
-    person
-        .save()
-        .then(savedPerson => {
-            response.json(formatPerson(savedPerson))
+                person
+                    .save()
+                    .then(savedPerson => {
+                        response.json(formatPerson(savedPerson))
+                    })
+                    .catch(error => {
+                        response.status(404).send({ error: 'no connection to database' })
+                    })
+            } else {
+                response.status(400).send({ error: 'name must be unique' })
+            }
         })
-        .catch(error => {
-            response.status(404).send({ error: 'no connection to database' })
-        })
+
+
 })
 
 const checkValidity = (body, response) => {
-    console.log(databaseContainsName(body.name))
     if (body.name === undefined || body.name === "") {
-        response.status(400).json({ error: 'name missing' })
-        return false
+        response.status(400).send({ error: 'name missing' })
     } else if (body.number === undefined || body.number === "") {
-        response.status(400).json({ error: 'number missing' })
-        return false
-    } else if (databaseContainsName(body.name)) {
-        console.log(databaseContainsName(body.name))
-        response.status(400).json({ error: 'name must be unique' })
-        return false
-    } else {
-        return true
+        response.status(400).send({ error: 'number missing' })
     }
-}
-
-const databaseContainsName = (name) => {
-    Person.find({name: name}).then(persons => {
-        console.log(persons)
-        return persons.length !== 0
-    })
 }
 
 app.put('/api/persons/:id', (request, response) => {
